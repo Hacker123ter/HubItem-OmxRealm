@@ -1,0 +1,9 @@
+item:
+  material: Compass
+  slot: 4
+  name: "&#FC0505Меню сервера"
+  description:
+    - "Это &#FC0505специальный &#05FC05предмет"
+    - "он &#0505FCвыполняет команду"
+  command: "Server"
+sound: 'ENTITY_PLAYER_LEVELUP'

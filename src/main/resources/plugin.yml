@@ -1,0 +1,17 @@
+name: HubItem
+version: '1.0.1-OmxRealm'
+main: org.dw363.HubItem
+api-version: '1.21'
+load: STARTUP
+authors: [dw363]
+description: Плагин, добавляющий автопредмет в хаб для открытия меню. Создано специально для сервера OmxRealm. Project The OMX.
+website: https://github.com/Hacker123ter
+commands:
+  HubItem:
+    description: Основная команда HubItem
+    usage: /<command> reload
+    permission: hubitem.reload
+    permission-message: У вас нет прав для использования данной команды.
+permissions:
+  hubitem.reload:
+    default: op
