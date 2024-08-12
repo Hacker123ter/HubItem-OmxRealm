@@ -1,5 +1,5 @@
 item:
-  material: Compass
+  material: COMPASS
   slot: 4
   name: "&#FC0505Меню сервера"
   description:
