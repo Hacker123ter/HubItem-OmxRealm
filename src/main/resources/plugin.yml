@@ -1,5 +1,5 @@
 name: HubItem
-version: '1.0.1-OmxRealm'
+version: '1.0.2-OmxRealm'
 main: org.dw363.HubItem
 api-version: '1.21'
 load: STARTUP
@@ -14,4 +14,5 @@ commands:
     permission-message: У вас нет прав для использования данной команды.
 permissions:
   hubitem.reload:
+    description: Позволяет перезагрузить конфигурацию плагина.
     default: op

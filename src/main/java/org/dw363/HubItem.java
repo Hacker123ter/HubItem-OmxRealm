@@ -125,12 +125,10 @@ public class HubItem extends JavaPlugin implements Listener {
             if (timeRemaining > 0) {
                 int secondsRemaining = (int) Math.ceil(timeRemaining / 1000.0);
 
-                // Получаем правильное склонение для слова "секунда"
                 String secondsWord = getSecondsWord(secondsRemaining);
-
-                player.sendMessage(ChatColor.RED + "Подождите " + secondsRemaining + " " + secondsWord + " перед использованием!");
+                sendActionBar(player,ChatColor.RED + "Подождите " + secondsRemaining + " " + secondsWord + " перед использованием!");
             } else {
-                lastUse.put(player, currentTime);
+                lastUse.put(player, currentTime)    ;
                 Bukkit.dispatchCommand(player, command);
                 player.playSound(player.getLocation(), useSound, 1.0f, 1.0f);
             }
@@ -149,14 +147,30 @@ public class HubItem extends JavaPlugin implements Listener {
         }
     }
 
+    private void sendActionBar(Player player, String message) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, net.md_5.bungee.api.chat.TextComponent.fromLegacyText(message));
+            }
+        }.runTask(this);
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
-            if (event.getSlot() == itemSlot || isHubItem(event.getCurrentItem())) {
-                event.setCancelled(true);
-                Bukkit.getScheduler().runTaskLater(this, () -> player.getInventory().setItem(itemSlot, createItem()), 1L);
+            ItemStack clickedItem = event.getCurrentItem();
+
+            if (isHubItem(clickedItem)) {
+                if (event.getSlot() != itemSlot) {
+                    event.setCancelled(true);
+                    Bukkit.getScheduler().runTaskLater(this, () -> player.getInventory().setItem(itemSlot, createItem()), 1L);
+                } else {
+                    event.setCancelled(true);
+                }
             }
+            removeDuplicateItems(player);
         }
     }
 
@@ -164,19 +178,23 @@ public class HubItem extends JavaPlugin implements Listener {
     public void onInventoryDrag(InventoryDragEvent event) {
         if (event.getWhoClicked() instanceof Player) {
             Player player = (Player) event.getWhoClicked();
-            if (event.getRawSlots().contains(itemSlot) || isHubItem(event.getOldCursor())) {
+
+            if (isHubItem(event.getOldCursor()) || isHubItem(event.getCursor())) {
                 event.setCancelled(true);
                 Bukkit.getScheduler().runTaskLater(this, () -> player.getInventory().setItem(itemSlot, createItem()), 1L);
             }
+            removeDuplicateItems(player);
         }
     }
 
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         ItemStack item = event.getItemDrop().getItemStack();
+
         if (isHubItem(item)) {
             event.setCancelled(true);
             Bukkit.getScheduler().runTaskLater(this, () -> event.getPlayer().getInventory().setItem(itemSlot, createItem()), 1L);
+            removeDuplicateItems(event.getPlayer());
         }
     }
 
@@ -189,7 +207,20 @@ public class HubItem extends JavaPlugin implements Listener {
                 if (!isHubItem(item)) {
                     player.getInventory().setItem(itemSlot, createItem());
                 }
+                removeDuplicateItems(player);
             }, 1L);
+        }
+    }
+
+    private void removeDuplicateItems(Player player) {
+        ItemStack correctItem = player.getInventory().getItem(itemSlot);
+        if (!isHubItem(correctItem)) {
+            return;
+        }
+        for (int i = 0; i < player.getInventory().getSize(); i++) {
+            if (i != itemSlot && isHubItem(player.getInventory().getItem(i))) {
+                player.getInventory().clear(i);
+            }
         }
     }
 
