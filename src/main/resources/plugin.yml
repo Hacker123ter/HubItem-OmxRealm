@@ -1,6 +1,6 @@
 name: HubItem
-version: '1.0.2-OmxRealm'
-main: org.dw363.HubItem
+version: '1.0.3-OmxRealm'
+main: org.dw363.hubitem.Main
 api-version: '1.21'
 load: STARTUP
 authors: [dw363]

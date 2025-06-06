@@ -6,7 +6,7 @@
 
     <groupId>org.dw363</groupId>
     <artifactId>HubItem</artifactId>
-    <version>1.0.2-OmxRealm</version>
+    <version>1.0.3-OmxRealm</version>
     <packaging>jar</packaging>
 
     <name>HubItem</name>
